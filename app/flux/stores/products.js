@@ -1,12 +1,7 @@
-import { get } from 'lodash';
-
 class ProductsStore {
 
   static isSoldOut = (product) =>
     product.inventory < 1;
-
-  static getQuantity = (product, cart) =>
-    get(cart, `products.${product.id}`);
 
   constructor() {
     this.bindActions(this.alt.getActions('products'));

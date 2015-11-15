@@ -1,26 +1,23 @@
 import React, { PropTypes } from 'react';
 import { get } from 'lodash';
 import { Button, ListGroup, ListGroupItem } from 'react-bootstrap';
-import * as Product from './Product';
 import connect from 'connect-alt';
+import * as Product from './Product';
 
 @connect((state) => ({
-  products: get(state, 'products.products'),
-  cartProducts: get(state, 'cart.products')
+  products: get(state, 'products.products')
 }))
 export default class Cart extends React.Component {
 
   static propTypes = {
-    products: PropTypes.array,
-    cartProducts: PropTypes.object
+    products: PropTypes.array
   };
 
   static contextTypes = { flux: PropTypes.object.isRequired };
 
   render() {
-    const ProductStore = this.context.flux.getStore('products');
     const CartStore = this.context.flux.getStore('cart');
-    const { cartProducts, products } = this.props;
+    const { products } = this.props;
     const hasProducts = CartStore.hasProducts();
     return (
       <div className='tf-cart'>
@@ -29,7 +26,7 @@ export default class Cart extends React.Component {
           { products.map(p =>
             <ListGroupItem bsSize={ 'xs' } key={ p.id }>
               <Product.Quantity
-                quantity={ ProductStore.getQuantity(p, cartProducts) }
+                quantity={ CartStore.getQuantity(p) }
                 style={ { float: 'right' } }
               />
               <Product.Title
