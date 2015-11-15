@@ -4,12 +4,14 @@ import * as Product from './Product';
 import connect from 'connect-alt';
 
 @connect((state) => ({
-  products: get(state, 'products.products')
+  products: get(state, 'products.products'),
+  inProgress: get(state, 'products.inProgress')
 }))
 export default class Products extends React.Component {
 
   static propTypes = {
-    products: PropTypes.array
+    products: PropTypes.array,
+    inProgress: PropTypes.bool
   };
 
   static contextTypes = { flux: PropTypes.object.isRequired };
@@ -17,7 +19,7 @@ export default class Products extends React.Component {
   render() {
     const ProductStore = this.context.flux.getStore('products');
     const CartStore = this.context.flux.getStore('cart');
-    const { products } = this.props;
+    const { products, inProgress } = this.props;
     const title = 'Products';
     return (
       <div className='tf-products'>
@@ -31,12 +33,17 @@ export default class Products extends React.Component {
                 product={ p }
                 quantity={ CartStore.getQuantity(p) }
                 isSoldOut={ ProductStore.isSoldOut(p) }
-                onClick={ () => console.log({ p }) }
+                onClick={ this.addProductToCart.bind(this, p) }
               />
             ) }
           </tbody>
         </Product.Table>
+        { inProgress && 'loading...' }
       </div>
     );
+  }
+
+  addProductToCart(product) {
+    this.context.flux.getActions('cart').addProductToCart(product);
   }
 }
