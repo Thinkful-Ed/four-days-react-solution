@@ -1,3 +1,5 @@
+import { reduce, findWhere, get } from 'lodash';
+
 export const products = {
   title: 'Products',
   products: [
@@ -13,5 +15,13 @@ export const products = {
       '0': 1,
       '3': 2
     }
-  }
+  },
+  getCartTotal: () =>
+      reduce(products.cart.products, (total, quantity, id) => {
+        const product = findWhere(products.products, { id: Number(id) });
+        return total + (get(product, 'price') * quantity);
+      }, 0),
+  hasProducts: () => reduce(products.cart.products, (t, q) => t + q, 0) > 0,
+  isSoldOut: (p) => p.inventory < 1,
+  getQuantity: (p) => get(products.cart, `products.${p.id}`)
 };

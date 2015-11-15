@@ -17,13 +17,14 @@ export const Price = ({ product, ...props }) =>
   </p>;
 
 export const Quantity = ({ quantity, ...props }) =>
-  <p { ...props }>
+  <span { ...props }>
     { quantity ? <Badge>x { quantity }</Badge> : null }
-  </p>;
+  </span>;
 
-export const AddToCartButton = ({ isSoldOut, ...props }) =>
+export const AddToCartButton = ({ isSoldOut, onClick, ...props }) =>
   <Button
     disabled={ isSoldOut }
+    onClick={ onClick }
     { ...props }
   />;
 
@@ -42,14 +43,16 @@ export const Table = ({ ...props }) =>
     className='tf-products__list' { ...props } />;
 
 export class TableRow extends React.Component {
+
   static propTypes = {
     product: PropTypes.object,
     quantity: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]),
-    isSoldOut: PropTypes.bool
+    isSoldOut: PropTypes.bool,
+    onClick: PropTypes.func
   };
 
   render() {
-    const { product, quantity, isSoldOut } = this.props;
+    const { product, quantity, isSoldOut, onClick } = this.props;
     return (
       <Row>
         <td>
@@ -69,6 +72,7 @@ export class TableRow extends React.Component {
         </td>
         <td>
           <AddToCartButton
+            onClick={ onClick.bind(null, product) }
             product={ product }
             isSoldOut={ isSoldOut }>
             Add To Cart
