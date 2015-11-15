@@ -1,5 +1,8 @@
 import React from 'react';
-import { includes, get } from 'lodash';
+import { get } from 'lodash';
+import {
+  Grid, Col, Button, Badge, Label, Table
+} from 'react-bootstrap';
 
 export default class Products extends React.Component {
   render() {
@@ -9,9 +12,9 @@ export default class Products extends React.Component {
         { id: 0, price: 1.00, inventory: 1, title: 'T-shirt' },
         { id: 1, price: 1.00, inventory: 1, title: 'Sweater' },
         { id: 2, price: 1.00, inventory: 1, title: 'Vest' },
-        { id: 3, price: 1.00, inventory: 1, title: 'Trousers' },
+        { id: 3, price: 1.00, inventory: 0, title: 'Trousers' },
         { id: 4, price: 1.00, inventory: 1, title: 'Jeans' },
-        { id: 5, price: 1.00, inventory: 1, title: 'Baseball' }
+        { id: 5, price: 1.00, inventory: 0, title: 'Baseball' }
       ],
       cart: {
         products: {
@@ -20,27 +23,50 @@ export default class Products extends React.Component {
         }
       }
     };
-    const isInCart = (pId) => includes(Object.keys(props.cart.products), pId);
     const isSoldOut = (p) => p.inventory < 1;
     const getQuantity = (p) => get(props.cart, `products.${p.id}`);
     return (
-      <div className='tf-products'>
-        <h3>{ props.title }</h3>
-        <div className='tf-products__list'>
-          { props.products.map(p =>
-            <div key={ p.id } className='tf-products__item'>
-              { isSoldOut(p) && 'Sold Out' }
-              <div className='tf-products__product-title'>
-                { p.title } - &#36;{ p.price } { getQuantity(p) }
-              </div>
-              <button
-                disabled={ isSoldOut(p) }>
-                { isInCart(p.id) ? 'Remove from cart' : 'Add to cart' }
-              </button>
-            </div>
-          ) }
-        </div>
-      </div>
+      <Grid className='tf-products'>
+        <Col sm={ 6 }>
+          <h3>{ props.title }</h3>
+          <Table striped bordered condensed hover className='tf-products__list'>
+            <thead>
+              <tr>
+                <td>Title</td>
+                <td>Price</td>
+                <td>Quantity</td>
+                <td></td>
+              </tr>
+            </thead>
+            <tbody>
+              { props.products.map(p =>
+                <tr key={ p.id } className='tf-products__item'>
+                  <td>
+                    <h5 className='tf-products__product-title'>
+                      { p.title }
+                      &nbsp;
+                      { isSoldOut(p) ? <Label bsStyle='warning'>Sold Out</Label> : null }
+                    </h5>
+                  </td>
+                  <td>
+                    &#36;{ p.price }
+                  </td>
+                  <td>
+                    { getQuantity(p) ? <Badge>x { getQuantity(p) }</Badge> : null }
+                  </td>
+                  <td>
+                    <Button
+                      style={ { float: 'right' } }
+                      disabled={ isSoldOut(p) }>
+                      Add to cart
+                    </Button>
+                  </td>
+                </tr>
+              ) }
+            </tbody>
+          </Table>
+        </Col>
+      </Grid>
     );
   }
 }
