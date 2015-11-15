@@ -42,6 +42,7 @@ export const Table = ({ ...props }) =>
   <BSTable striped bordered condensed
     className='tf-products__list' { ...props } />;
 
+// some prop validation
 export class TableRow extends React.Component {
 
   static propTypes = {
@@ -72,7 +73,7 @@ export class TableRow extends React.Component {
         </td>
         <td>
           <AddToCartButton
-            onClick={ onClick.bind(null, product) }
+            onClick={ onClick }
             product={ product }
             isSoldOut={ isSoldOut }>
             Add To Cart
