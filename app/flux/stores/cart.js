@@ -4,10 +4,7 @@ class CartStore {
 
   constructor() {
     this.inProgress = false;
-    this.products = {
-      '0': 1,
-      '3': 2
-    };
+    this.products = {};
     this.bindActions(this.alt.getActions('cart'));
     this.exportPublicMethods({
       getQuantity: this.getQuantity.bind(this),

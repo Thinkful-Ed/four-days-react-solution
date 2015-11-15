@@ -1,3 +1,5 @@
+import { findWhere } from 'lodash';
+
 class ProductsStore {
 
   static isSoldOut = (product) =>
@@ -7,6 +9,13 @@ class ProductsStore {
     this.bindActions(this.alt.getActions('products'));
     this.inProgress = false;
     this.products = [];
+    this.exportPublicMethods({
+      getProduct: this.getProduct.bind(this)
+    });
+  }
+
+  getProduct(id) {
+    return findWhere(this.products, { id });
   }
 
   startFetchProducts() {
