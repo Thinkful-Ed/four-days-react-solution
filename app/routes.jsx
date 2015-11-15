@@ -4,6 +4,7 @@ import { generateRoute } from 'utils/localized-routes';
 
 export default (
   <Route component={ require('./components/app') }>
+    <Route path='/products' component={ require('./components/shopping-app/Products') } />
     { generateRoute({
       paths: ['/', '/users', '/utilisateurs'],
       component: require('./components/users')
